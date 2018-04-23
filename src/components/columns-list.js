@@ -19,14 +19,35 @@ class ColumnsList extends Component {
 
   componentDidMount() {
     this.setState({ columns: [
-      { id: uuid.v1(), name: 'TODO' },
-      { id: uuid.v1(), name: 'WIP' },
-      { id: uuid.v1(), name: 'DONE' }
-    ]})
+      { id: uuid.v1(), name: 'Todo', cards: [
+        {
+          id: uuid.v1(),
+          name: "Mettre un slip propre"
+        },
+        {
+          id: uuid.v1(),
+          name: "Mettre un nouveau slip"
+        },
+        {
+          id: uuid.v1(),
+          name: "Acheter un slip de couleur"
+        },
+        {
+          id: uuid.v1(),
+          name: "Lorem ipsum dolor sit amet, lorem ipsum mamène."
+        }
+      ]},
+      { id: uuid.v1(), name: 'Doing', cards: [] },
+      { id: uuid.v1(), name: 'Done', cards: [] }
+    ]});
   }
 
   addColumn(name) {
-    this.setState({ columns: [ ...this.state.columns, {name: name, id: uuid.v1()} ]});
+    this.setState({ columns: [ ...this.state.columns, {
+      id: uuid.v1(),
+      name: name,
+      cards: []
+    }]});
   }
 
   setEditedColumn(column) {
@@ -37,8 +58,8 @@ class ColumnsList extends Component {
     return this.state.columns.map(col => {
       return <Column
         key={col.id}
-        col={col}
-        editing={this.state.editedColumn !== null && col === this.state.editedColumn}
+        column={col}
+        editing={null !== this.state.editedColumn && col === this.state.editedColumn}
         setEditedColumn={this.setEditedColumn} />;
     });
   }

@@ -39,32 +39,30 @@ class NewColumn extends Component {
     this.setState({name: '', editing: false});
   }
 
-  render() {
+  renderTitle() {
     if (this.state.editing) {
       return (
-        <div className="card" style={{width: '14rem'}}>
-          <div className="card-body">
-            <form onSubmit={this.addColumn}>
-              <input
-                autoFocus={true}
-                value={this.state.name}
-                onChange={this.onInputChange}
-                type="text"
-                className="form-control"
-                placeholder="Add a list" />
-              <button type="submit">Save</button>
-              <a href="#" onClick={this.disableEdition}>Cancel</a>
-            </form>
-          </div>
-        </div>
+        <form onSubmit={this.addColumn}>
+          <input
+            autoFocus={true}
+            value={this.state.name}
+            onChange={this.onInputChange}
+            type="text"
+            className="form-control"
+            placeholder="Add a list" />
+          <button type="submit">Save</button>
+          <a href="#" onClick={this.disableEdition}>Cancel</a>
+        </form>
       );
     }
 
+    return <h5><a href="#" onClick={this.enableEdition}>Add a list</a></h5>;
+  }
+
+  render() {
     return(
-      <div className="card border-light" style={{width: '14rem'}}>
-        <div className="card-body">
-          <h5><a href="#" onClick={this.enableEdition}>Add a list</a></h5>
-        </div>
+      <div className="col">
+        { this.renderTitle() }
       </div>
     );
   }
