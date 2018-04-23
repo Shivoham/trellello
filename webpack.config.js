@@ -2,6 +2,10 @@ module.exports = {
   entry: [
     './src/index.js'
   ],
+  watch: true,
+  watchOptions: {
+    poll: 1000
+  },
   output: {
     path: __dirname,
     publicPath: '/',
