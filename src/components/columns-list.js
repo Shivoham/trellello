@@ -11,8 +11,8 @@ class ColumnsList extends Component {
       columns: []
     };
 
-    this.addColumn       = this.addColumn.bind(this);
-    this.renderColumns   = this.renderColumns.bind(this);
+    this.addColumn     = this.addColumn.bind(this);
+    this.renderColumns = this.renderColumns.bind(this);
   }
 
   componentDidMount() {
