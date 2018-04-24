@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import Card from './card';
+import NewCard from './new-card';
+import uuid from 'uuid';
 
 class Column extends Component {
   constructor(props) {
@@ -8,18 +10,19 @@ class Column extends Component {
     this.state = {
       name: props.column.name,
       cards: props.column.cards,
-      editedCard: null
+      editing: false
     };
 
-    this.enableEdition  = this.enableEdition.bind(this);
-    this.onInputChange  = this.onInputChange.bind(this);
-    this.submitColumn   = this.submitColumn.bind(this);
-    this.setEditedCard   = this.setEditedCard.bind(this);
+    this.enableEdition = this.enableEdition.bind(this);
+    this.onInputChange = this.onInputChange.bind(this);
+    this.submitColumn  = this.submitColumn.bind(this);
+    this.addCard       = this.addCard.bind(this);
+    this.removeCard    = this.removeCard.bind(this);
   }
 
   enableEdition(event) {
     event.preventDefault();
-    this.props.setEditedColumn(this.props.column);
+    this.setState({editing: true});
   }
 
   onInputChange(event) {
@@ -32,15 +35,24 @@ class Column extends Component {
       return;
     }
 
-    this.props.setEditedColumn(null);
+    this.setState({editing: false});
   }
 
-  setEditedCard(card) {
-    this.setState({editedCard: card});
+  addCard(cardName) {
+    this.setState({cards: [
+      ...this.state.cards,
+      { id: uuid.v1(), name: cardName }
+    ]});
+  }
+
+  removeCard(card) {
+    this.setState({cards: this.state.cards.filter(currentCard => {
+      return currentCard.id !== card.id;
+    })})
   }
 
   renderTitle() {
-    if (this.props.editing) {
+    if (this.state.editing) {
       return (
         <form onSubmit={this.submitColumn}>
           <input
@@ -56,25 +68,29 @@ class Column extends Component {
       );
     }
 
-    return <h5 className="card-title align-top" onClick={this.enableEdition}>{this.state.name}</h5>;
+    return (
+      <h5 className="card-title align-top" onClick={this.enableEdition}>
+        {this.state.name}
+      </h5>
+    );
   }
 
   render() {
-    let cards = this.state.cards.map(card => {
+    const cards = this.state.cards.map(card => {
       return (
         <Card
-          editing={card === this.state.editedCard}
-          setEditedCard={this.setEditedCard}
           key={card.id}
+          removeCard={this.removeCard}
           card={card} />
       );
     });
 
     return (
-      <div className="col">
+      <div className="column">
         { this.renderTitle() }
         { cards }
-        <a href="#">Add a card</a>
+        <NewCard
+          addCard={this.addCard} />
       </div>
     );
   }

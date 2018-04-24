@@ -5,17 +5,19 @@ class Card extends Component {
     super(props);
 
     this.state = {
-      name: this.props.card.name
+      name: this.props.card.name,
+      editing: false
     };
 
     this.onInputChange = this.onInputChange.bind(this);
     this.enableEdition = this.enableEdition.bind(this);
-    this.submitCard = this.submitCard.bind(this);
+    this.submitCard    = this.submitCard.bind(this);
+    this.removeCard    = this.removeCard.bind(this);
   }
 
   enableEdition(event) {
     event.preventDefault();
-    this.props.setEditedCard(this.props.card);
+    this.setState({editing: true});
   }
 
   onInputChange(event) {
@@ -28,33 +30,39 @@ class Card extends Component {
       return;
     }
 
-    this.props.setEditedCard(null);
+    this.setState({editing: false});
   }
 
-  render() {
-    if (this.props.editing) {
+  removeCard(event) {
+    event.preventDefault();
+    this.props.removeCard(this.props.card);
+  }
+
+  renderContent() {
+    if (this.state.editing) {
       return (
-        <div className="card">
-          <div className="card-body">
-            <form onSubmit={this.submitCard}>
-              <input
-                autoFocus={true}
-                value={this.state.name}
-                onChange={this.onInputChange}
-                onBlur={this.submitCard}
-                onFocus={(event) => event.target.select()}
-                type="text"
-                className="form-control" />
-            </form>
-          </div>
-        </div>
+        <form onSubmit={this.submitCard}>
+          <input
+            autoFocus={true}
+            value={this.state.name}
+            onChange={this.onInputChange}
+            onBlur={this.submitCard}
+            onFocus={(event) => event.target.select()}
+            type="text"
+            className="form-control" />
+        </form>
       );
     }
 
+    return <h6 onClick={this.enableEdition}>{ this.state.name }</h6>;
+  }
+
+  render() {
     return (
       <div className="card">
-        <div className="card-body" onClick={this.enableEdition}>
-          <h6>{ this.state.name }</h6>
+        <div className="card-body">
+          {this.renderContent()}
+          <a href="#" onClick={this.removeCard}>Remove card</a>
         </div>
       </div>
     );
