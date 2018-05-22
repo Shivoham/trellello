@@ -4,4 +4,14 @@
   padding-bottom: 20px;
   width: 270px;
   padding: 10px;
+  height: fit-content;
+  border-radius: 5px;
+}
+
+.the-row {
+  margin-top: 10px;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  display: -webkit-box !important;
+  height: 100vh;
 }
