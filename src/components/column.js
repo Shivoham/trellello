@@ -16,7 +16,6 @@ class Column extends Component {
     this.enableEdition = this.enableEdition.bind(this);
     this.onInputChange = this.onInputChange.bind(this);
     this.submitColumn  = this.submitColumn.bind(this);
-    this.addCard       = this.addCard.bind(this);
     this.removeCard    = this.removeCard.bind(this);
   }
 
@@ -36,13 +35,7 @@ class Column extends Component {
     }
 
     this.setState({editing: false});
-  }
-
-  addCard(cardName) {
-    this.setState({cards: [
-      ...this.state.cards,
-      { id: uuid.v1(), name: cardName }
-    ]});
+    this.props.editColumn(this.state.name, this.props.column);
   }
 
   removeCard(card) {
@@ -70,7 +63,7 @@ class Column extends Component {
 
     return (
       <h5 className="card-title align-top" onClick={this.enableEdition}>
-        {this.state.name}
+        {this.props.column.name}
       </h5>
     );
   }
@@ -81,6 +74,7 @@ class Column extends Component {
         <Card
           key={card.id}
           removeCard={this.removeCard}
+          editCard={this.props.editCard}
           card={card} />
       );
     });
@@ -90,7 +84,8 @@ class Column extends Component {
         { this.renderTitle() }
         { cards }
         <NewCard
-          addCard={this.addCard} />
+          column={this.props.column}
+          addCard={this.props.addCard} />
       </div>
     );
   }

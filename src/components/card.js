@@ -31,6 +31,7 @@ class Card extends Component {
     }
 
     this.setState({editing: false});
+    this.props.editCard(this.state.name, this.props.card)
   }
 
   removeCard(event) {
@@ -54,7 +55,7 @@ class Card extends Component {
       );
     }
 
-    return <h6 onClick={this.enableEdition}>{ this.state.name }</h6>;
+    return <h6 onClick={this.enableEdition}>{ this.props.card.name }</h6>;
   }
 
   render() {

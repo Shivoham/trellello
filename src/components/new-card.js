@@ -31,7 +31,7 @@ class NewCard extends Component {
       return;
     }
 
-    this.props.addCard(this.state.name);
+    this.props.addCard(this.state.name, this.props.column);
     this.setState({name: null, editing: false});
   }
 
