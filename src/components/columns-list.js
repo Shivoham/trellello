@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import Column from './column.js';
 import NewColumn from './new-column.js';
 import uuid from 'uuid';
+import { connect } from 'react-redux';
+import { fetchColumns } from '../actions/columns';
+import _ from 'lodash';
 
 class ColumnsList extends Component {
   constructor(props) {
@@ -11,30 +14,13 @@ class ColumnsList extends Component {
       columns: []
     };
 
-    this.addColumn  = this.addColumn.bind(this);
     this.editColumn = this.editColumn.bind(this);
     this.addCard    = this.addCard.bind(this);
     this.editCard   = this.editCard.bind(this);
   }
 
   componentDidMount() {
-    this.setState({ columns: [
-      { id: uuid.v1(), name: 'Todo', cards: [
-        { id: uuid.v1(), name: "Mettre un slip propre" },
-        { id: uuid.v1(), name: "Mettre un nouveau slip" },
-        { id: uuid.v1(), name: "Acheter un slip de couleur" }
-      ]},
-      { id: uuid.v1(), name: 'Doing', cards: [] },
-      { id: uuid.v1(), name: 'Done', cards: [] }
-    ]});
-  }
-
-  addColumn(name) {
-    this.setState({ columns: [ ...this.state.columns, {
-      id: uuid.v1(),
-      name: name,
-      cards: []
-    }]});
+    this.props.fetchColumns();
   }
 
   editColumn(name, editedColumn) {
@@ -74,10 +60,11 @@ class ColumnsList extends Component {
   }
 
   render() {
-    const columns = this.state.columns.map(col => {
+    const columns = _.map(this.props.columns, (col, id) => {
       return <Column
-        key={col.id}
+        key={id}
         column={col}
+        id={id}
         editColumn={this.editColumn}
         editCard ={this.editCard}
         addCard ={this.addCard} />
@@ -86,10 +73,14 @@ class ColumnsList extends Component {
     return (
       <div className="row the-row">
         {columns}
-        <NewColumn addColumn={this.addColumn} />
+        <NewColumn />
       </div>
     );
   }
 }
 
-export default ColumnsList;
+function mapStateToProps(state, ownProps) {
+  return { columns: state.columns };
+}
+
+export default connect(mapStateToProps, { fetchColumns })(ColumnsList);

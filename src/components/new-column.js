@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { addColumn } from '../actions/columns';
 
 class NewColumn extends Component {
   constructor(props) {
@@ -68,4 +70,4 @@ class NewColumn extends Component {
   }
 }
 
-export default NewColumn;
+export default connect(null, { addColumn })(NewColumn);

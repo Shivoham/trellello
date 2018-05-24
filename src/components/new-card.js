@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { addCard } from '../actions/cards';
 
 class NewCard extends Component {
   constructor(state) {
@@ -31,7 +33,7 @@ class NewCard extends Component {
       return;
     }
 
-    this.props.addCard(this.state.name, this.props.column);
+    this.props.addCard({name: this.state.name}, this.props.columnId);
     this.setState({name: null, editing: false});
   }
 
@@ -60,4 +62,4 @@ class NewCard extends Component {
   }
 }
 
-export default NewCard;
+export default connect(null, { addCard })(NewCard);
