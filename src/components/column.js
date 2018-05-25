@@ -2,6 +2,10 @@ import React, { Component } from 'react';
 import Card from './card';
 import NewCard from './new-card';
 import uuid from 'uuid';
+import _ from 'lodash';
+import { connect } from 'react-redux';
+import { removeColumn, editColumn } from '../actions/columns';
+import { fetchCards } from '../actions/cards';
 
 class Column extends Component {
   constructor(props) {
@@ -17,6 +21,11 @@ class Column extends Component {
     this.onInputChange = this.onInputChange.bind(this);
     this.submitColumn  = this.submitColumn.bind(this);
     this.removeCard    = this.removeCard.bind(this);
+    this.removeColumn  = this.removeColumn.bind(this);
+  }
+
+  componentDidMount() {
+    this.props.fetchCards(this.props.id);
   }
 
   enableEdition(event) {
@@ -35,7 +44,7 @@ class Column extends Component {
     }
 
     this.setState({editing: false});
-    this.props.editColumn(this.state.name, this.props.column);
+    this.props.editColumn(this.props.id, { name: this.state.name });
   }
 
   removeCard(card) {
@@ -44,20 +53,27 @@ class Column extends Component {
     })})
   }
 
+  removeColumn(event) {
+    event.preventDefault();
+    this.props.removeColumn(this.props.id);
+  }
+
   renderTitle() {
     if (this.state.editing) {
       return (
-        <form onSubmit={this.submitColumn}>
-          <input
-            autoFocus={true}
-            value={this.state.name}
-            onChange={this.onInputChange}
-            onBlur={this.submitColumn}
-            onFocus={(event) => event.target.select()}
-            type="text"
-            className="form-control"
-            placeholder="Add a list" />
-        </form>
+        <div>
+          <form onSubmit={this.submitColumn}>
+            <input
+              autoFocus={true}
+              value={this.state.name}
+              onChange={this.onInputChange}
+              onFocus={(event) => event.target.select()}
+              type="text"
+              className="form-control"
+              placeholder="Add a list" />
+          </form>
+          <a href="#" onClick={this.removeColumn}>Remove column</a>
+        </div>
       );
     }
 
@@ -69,10 +85,12 @@ class Column extends Component {
   }
 
   render() {
-    const cards = this.state.cards.map(card => {
+    const cards = _.map(this.props.cards, (card, id) => {
       return (
         <Card
-          key={card.id}
+          key={id}
+          id={id}
+          columnId={this.props.id}
           removeCard={this.removeCard}
           editCard={this.props.editCard}
           card={card} />
@@ -85,10 +103,15 @@ class Column extends Component {
         { cards }
         <NewCard
           column={this.props.column}
-          addCard={this.props.addCard} />
+          columnId={this.props.id}
+        / >
       </div>
     );
   }
 }
 
-export default Column;
+function mapStateToProps({cards}, ownProps) {
+  return { cards: cards[ownProps.id] };
+}
+
+export default connect(mapStateToProps, { removeColumn, editColumn, fetchCards })(Column);

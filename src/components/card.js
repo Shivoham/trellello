@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { editCard, removeCard } from '../actions/cards';
 
 class Card extends Component {
   constructor(props) {
@@ -31,12 +33,12 @@ class Card extends Component {
     }
 
     this.setState({editing: false});
-    this.props.editCard(this.state.name, this.props.card)
+    this.props.editCard(this.props.id,  this.props.columnId, { name: this.state.name })
   }
 
   removeCard(event) {
     event.preventDefault();
-    this.props.removeCard(this.props.card);
+    this.props.removeCard(this.props.id, this.props.columnId);
   }
 
   renderContent() {
@@ -70,4 +72,4 @@ class Card extends Component {
   }
 }
 
-export default Card;
+export default connect(null, { editCard, removeCard })(Card);
